@@ -67,16 +67,19 @@ type Client struct {
 	// internal flag to check if the instance should be initialized again
 	// i.e, we should create a new gosseract client when language or config file change
 	shouldInit bool
+
+	OcrEngineMode OcrEngineMode
 }
 
 // NewClient construct new Client. It's due to caller to Close this client.
 func NewClient() *Client {
 	client := &Client{
-		api:        C.Create(),
-		Variables:  map[SettableVariable]string{},
-		Trim:       true,
-		shouldInit: true,
-		Languages:  []string{"eng"},
+		api:           C.Create(),
+		Variables:     map[SettableVariable]string{},
+		Trim:          true,
+		shouldInit:    true,
+		Languages:     []string{"eng"},
+		OcrEngineMode: OEM_DEFAULT,
 	}
 	// set a finalizer to close the client when it's unused and not closed by the user
 	runtime.SetFinalizer(client, (*Client).Close)
@@ -290,7 +293,7 @@ func (client *Client) init() error {
 	defer C.free(unsafe.Pointer(tessdataPrefix))
 
 	errbuf := [512]C.char{}
-	res := C.Init(client.api, tessdataPrefix, languages, configfile, &errbuf[0])
+	res := C.Init(client.api, C.int(client.OcrEngineMode), tessdataPrefix, languages, configfile, &errbuf[0])
 	msg := C.GoString(&errbuf[0])
 
 	if res != 0 {
