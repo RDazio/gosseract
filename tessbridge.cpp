@@ -38,7 +38,7 @@ void ClearPersistentCache(TessBaseAPI a) {
 int Init(TessBaseAPI a, int tesseract_engine, char* tessdataprefix, char* languages) {
     tesseract::TessBaseAPI* api = (tesseract::TessBaseAPI*)a;
     tesseract::OcrEngineMode mode = (tesseract::OcrEngineMode)tesseract_engine;
-    return api->Init(tessdataprefix, languages, mode);
+    return api->Init(tessdataprefix, languages, mode, NULL, 0, NULL, NULL, false);
 }
 
 int Init(TessBaseAPI a, int tesseract_engine, char* tessdataprefix, char* languages, char* configfilepath, char* errbuf) {
@@ -57,9 +57,9 @@ int Init(TessBaseAPI a, int tesseract_engine, char* tessdataprefix, char* langua
     if (configfilepath != NULL) {
         char* configs[] = {configfilepath};
         int configs_size = 1;
-        ret = api->Init(tessdataprefix, languages, mode, configs, configs_size, NULL, NULL, false);
+        ret = api->Init(tessdataprefix, languages, mode, NULL, 0, NULL, NULL, false);
     } else {
-        ret = api->Init(tessdataprefix, languages, mode);
+        ret = api->Init(tessdataprefix, languages, mode, NULL, 0, NULL, NULL, false);
     }
 
     // {{{ Restore default stderr
