@@ -86,6 +86,20 @@ func NewClient() *Client {
 	return client
 }
 
+func NewClient2(oem OcrEngineMode) *Client {
+	client := &Client{
+		api:           C.Create(),
+		Variables:     map[SettableVariable]string{},
+		Trim:          true,
+		shouldInit:    true,
+		Languages:     []string{"eng"},
+		OcrEngineMode: oem,
+	}
+	// set a finalizer to close the client when it's unused and not closed by the user
+	runtime.SetFinalizer(client, (*Client).Close)
+	return client
+}
+
 // Close frees allocated API. This MUST be called for ANY client constructed by "NewClient" function.
 func (client *Client) Close() (err error) {
 	// no need for a finalizer anymore
