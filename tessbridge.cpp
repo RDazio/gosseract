@@ -57,7 +57,7 @@ int Init(TessBaseAPI a, int tesseract_engine, char* tessdataprefix, char* langua
     if (configfilepath != NULL) {
         char* configs[] = {configfilepath};
         int configs_size = 1;
-        ret = api->Init(tessdataprefix, languages, mode, NULL, 0, NULL, NULL, false);
+        ret = api->Init(tessdataprefix, languages, mode, configs, configs_size, NULL, NULL, false);
     } else {
         ret = api->Init(tessdataprefix, languages, mode, NULL, 0, NULL, NULL, false);
     }
