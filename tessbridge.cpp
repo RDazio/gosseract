@@ -230,3 +230,9 @@ const char* GetDataPath() {
     api.Init(nullptr, nullptr);
     return api.GetDatapath();
 }
+
+
+void SetSourceResolution(TessBaseAPI a, int ppi) {
+    tesseract::TessBaseAPI* api = (tesseract::TessBaseAPI*)a;
+    api->SetSourceResolution(ppi);
+}

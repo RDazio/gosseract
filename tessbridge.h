@@ -33,6 +33,7 @@ char* UTF8Text(TessBaseAPI);
 char* HOCRText(TessBaseAPI);
 const char* Version(TessBaseAPI);
 const char* GetDataPath();
+void SetSourceResolution(TessBaseAPI, int);
 
 PixImage CreatePixImageByFilePath(char*);
 PixImage CreatePixImageFromBytes(unsigned char*, int);
