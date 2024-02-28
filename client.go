@@ -135,7 +135,7 @@ func (client *Client) Version() string {
 }
 
 // SetImage sets path to image file to be processed OCR.
-func (client *Client) SetImage(imagepath string) error {
+func (client *Client) SetImage(imagepath string, dpi int) error {
 
 	if client.api == nil {
 		return ErrClientNotConstructed
@@ -161,6 +161,8 @@ func (client *Client) SetImage(imagepath string) error {
 	}
 
 	client.pixImage = img
+
+	client.SetSourceResolution(dpi)
 
 	return nil
 }
@@ -477,6 +479,6 @@ func getDataPath() string {
 	return C.GoString(C.GetDataPath())
 }
 
-func SetSourceResolution(client *Client, resolution int) {
+func (client *Client) SetSourceResolution(resolution int) {
 	C.SetSourceResolution(client.api, C.int(resolution))
 }
