@@ -69,6 +69,8 @@ type Client struct {
 	shouldInit bool
 
 	OcrEngineMode OcrEngineMode
+
+	dpi int
 }
 
 // NewClient construct new Client. It's due to caller to Close this client.
@@ -80,13 +82,14 @@ func NewClient() *Client {
 		shouldInit:    true,
 		Languages:     []string{"eng"},
 		OcrEngineMode: OEM_DEFAULT,
+		dpi:           70,
 	}
 	// set a finalizer to close the client when it's unused and not closed by the user
 	runtime.SetFinalizer(client, (*Client).Close)
 	return client
 }
 
-func NewClient2(oem OcrEngineMode) *Client {
+func NewClient2(oem OcrEngineMode, dpi int) *Client {
 	client := &Client{
 		api:           C.Create(),
 		Variables:     map[SettableVariable]string{},
@@ -94,6 +97,7 @@ func NewClient2(oem OcrEngineMode) *Client {
 		shouldInit:    true,
 		Languages:     []string{"eng"},
 		OcrEngineMode: oem,
+		dpi:           dpi,
 	}
 	// set a finalizer to close the client when it's unused and not closed by the user
 	runtime.SetFinalizer(client, (*Client).Close)
@@ -161,8 +165,6 @@ func (client *Client) SetImage(imagepath string, dpi int) error {
 	}
 
 	client.pixImage = img
-
-	client.SetSourceResolution(dpi)
 
 	return nil
 }
@@ -325,6 +327,7 @@ func (client *Client) init() error {
 	}
 
 	C.SetPixImage(client.api, client.pixImage)
+	C.SetSourceResolution(client.api, C.int(client.dpi))
 
 	client.shouldInit = false
 
@@ -477,8 +480,4 @@ func (client *Client) GetBoundingBoxesVerbose() (out []BoundingBox, err error) {
 // installation stores trained models
 func getDataPath() string {
 	return C.GoString(C.GetDataPath())
-}
-
-func (client *Client) SetSourceResolution(resolution int) {
-	C.SetSourceResolution(client.api, C.int(resolution))
 }
