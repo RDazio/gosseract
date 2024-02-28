@@ -476,3 +476,7 @@ func (client *Client) GetBoundingBoxesVerbose() (out []BoundingBox, err error) {
 func getDataPath() string {
 	return C.GoString(C.GetDataPath())
 }
+
+func SetSourceResolution(client *Client, resolution int) {
+	C.SetSourceResolution(client.api, C.int(resolution))
+}
